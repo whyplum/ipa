@@ -1,3 +1,5 @@
+from itertools import zip_longest
+
 import nltk
 import requests
 import streamlit as st
@@ -20,9 +22,12 @@ def is_punctuation(word):
     return word in string.punctuation
 
 
-def get_html_word(text):
+def get_html_word_and_ipa(text):
     if is_punctuation(text):
-        return text
+        return (
+            f'<span style="color:#999999">{text}</span>',
+            f'<span style="color:#999999">{text}</span>',
+        )
 
     try:
         url = f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{text}?key={api_key}"
@@ -30,27 +35,34 @@ def get_html_word(text):
         data = response.json()
 
         text_syllables = data[0]["hwi"]["hw"].split("*")
+        ipa_syllables = data[0]["hwi"]["prs"][0]["mw"].split("-")
 
         if len(text_syllables) == 1:
-            return text
-
-        ipa_syllables = data[0]["hwi"]["prs"][0]["mw"].split("-")
+            return text, "-".join(ipa_syllables)
 
         # something wrong
         # if len(text_syllables) != len(ipa_syllables):
         #     return text
 
         html_word = ""
-        for tsy, isy in zip(text_syllables, ipa_syllables):
+        html_ipa = ""
+        for tsy, isy in zip_longest(text_syllables, ipa_syllables, fillvalue=""):
             if isy.startswith("ˌ") and len(text_syllables) > 2:
                 html_word += f'<span style="color:#f0bc6e">{tsy}</span>'
+                html_ipa += f'<span style="color:#f0bc6e">{isy}</span>'
+
             elif isy.startswith("ˈ"):
                 html_word += f'<span style="color:#f0776e">{tsy}</span>'
+                html_ipa += f'<span style="color:#f0776e">{isy}</span>'
             else:
                 html_word += tsy
-        return html_word
+                html_ipa += isy
+        return html_word, html_ipa
     except:
-        return text
+        return (
+            f'<span style="color:#999999">{text}</span>',
+            f'<span style="color:#999999">{text}</span>',
+        )
 
 
 # def open_page(url):
@@ -74,13 +86,19 @@ api_key = st.text_input(
 text = st.text_input("Enter text", "")
 if st.button("Transcribe"):
     html_output = ""
+    ipa_output = ""
     words = tokenize_with_spaces(text)
-    widget = st.empty()
+    widget1 = st.empty()
+    widget2 = st.empty()
     for word in words:
         if len(word.strip()):
-            html_word = get_html_word(word)
+            html_word, html_ipa = get_html_word_and_ipa(word)
             html_output += html_word
-            widget.write(html_output, unsafe_allow_html=True)
+            ipa_output += html_ipa
+            widget1.write(html_output, unsafe_allow_html=True)
+            widget2.write(ipa_output, unsafe_allow_html=True)
         else:
             html_output += " "
-            widget.write(html_output, unsafe_allow_html=True)
+            ipa_output += " "
+            widget1.write(html_output, unsafe_allow_html=True)
+            widget2.write(ipa_output, unsafe_allow_html=True)
