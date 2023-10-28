@@ -1,10 +1,10 @@
 from itertools import zip_longest
-import pandas as pd
+
 import nltk
+import pandas as pd
 import requests
 import streamlit as st
-
-# from streamlit.components.v1 import html
+import streamlit_authenticator as stauth
 
 nltk.download("punkt")
 import itertools
@@ -53,11 +53,16 @@ def get_html_word_and_ipa(text):
         response = requests.get(url)
         data = response.json()
 
-        print(data)
-
         text_syllables = data[0]["hwi"]["hw"].split("*")
-        ipa_syllables = data[0]["hwi"]["prs"][0]["mw"].split("-")
-        auto_ipa = data[0]["hwi"]["prs"][0]["sound"]["audio"]
+
+        ipa_syllables = []
+        auto_ipa = None
+
+        for ipa_candidate in data[0]["hwi"]["prs"]:
+            if "sound" in ipa_candidate:
+                auto_ipa = ipa_candidate["sound"]["audio"]
+                ipa_syllables = ipa_candidate["mw"].split("-")
+                break
 
         if len(text_syllables) == 1:
             return text, "-".join(ipa_syllables), auto_ipa
