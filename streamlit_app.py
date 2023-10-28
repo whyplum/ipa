@@ -102,9 +102,7 @@ url = "https://sd.blackball.lv/library/domain-driven_design_-_tackling_complexit
 
 st.link_button("DDD link", url)
 
-api_key = st.text_input(
-    "Enter API key",
-)
+api_key = st.secrets["DICT_API_KEY"]
 
 rows = []
 text = st.text_input("Enter text", "")
