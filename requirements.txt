@@ -2,3 +2,5 @@ streamlit==1.28.0
 nltk==3.8.1
 pandas==2.1.2
 streamlit-authenticator==0.2.3
+google-cloud-texttospeech==2.14.2
+google-cloud-api-keys==0.5.4

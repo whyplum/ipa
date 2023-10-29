@@ -4,13 +4,16 @@ import nltk
 import pandas as pd
 import requests
 import streamlit as st
-#import streamlit_authenticator as stauth
+
+# import streamlit_authenticator as stauth
 
 nltk.download("punkt")
 import itertools
 import string
 
 from nltk.tokenize import word_tokenize
+
+from text2speech import get_audio
 
 
 def tokenize_with_spaces(s):
@@ -104,14 +107,19 @@ def get_html_word_and_ipa(text):
 st.title("Text to IPA")
 url = "https://sd.blackball.lv/library/domain-driven_design_-_tackling_complexity_in_the_heart_of_software.pdf"
 
-
 st.link_button("DDD link", url)
+
+PROJECT_ID = st.text_input("PROJECT_ID", "")
+GOOGLE_API_KEY = st.text_input("GOOGLE_API_KEY", "")
 
 api_key = st.secrets["DICT_API_KEY"]
 
 rows = []
 text = st.text_input("Enter text", "")
 if st.button("Transcribe"):
+    get_audio(text, "audio.mp3", GOOGLE_API_KEY, PROJECT_ID)
+    st.audio("./audio.mp3")
+
     html_output = ""
     ipa_output = ""
     words = tokenize_with_spaces(text)
