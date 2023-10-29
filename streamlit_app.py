@@ -105,9 +105,16 @@ def get_html_word_and_ipa(text):
 #     html(open_script)
 
 st.title("Text to IPA")
-url = "https://sd.blackball.lv/library/domain-driven_design_-_tackling_complexity_in_the_heart_of_software.pdf"
 
-st.link_button("DDD link", url)
+links_dict = {
+    "DDD": "https://sd.blackball.lv/library/domain-driven_design_-_tackling_complexity_in_the_heart_of_software.pdf",
+    "The Deep Learning Book": "https://www.deeplearningbook.org",
+}
+st.text("Links you might like:")
+html_text = ""
+for name, url in links_dict.items():
+    html_text += f"<a href={url}>{name}</a>&nbsp;&nbsp;&nbsp;&nbsp;"
+st.markdown(html_text, unsafe_allow_html=True)
 
 PROJECT_ID = st.text_input("PROJECT_ID", "")
 GOOGLE_API_KEY = st.text_input("GOOGLE_API_KEY", "")
