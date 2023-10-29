@@ -4,7 +4,7 @@ import nltk
 import pandas as pd
 import requests
 import streamlit as st
-import streamlit_authenticator as stauth
+#import streamlit_authenticator as stauth
 
 nltk.download("punkt")
 import itertools
