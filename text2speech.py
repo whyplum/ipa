@@ -9,7 +9,7 @@ def get_audio(text: str, file_name: str, api_key_string: str, project_id: str) -
     synthesis_input = texttospeech.SynthesisInput(text=text)
 
     voice = texttospeech.VoiceSelectionParams(
-        language_code="en-US", ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+        language_code="en-US", name="en-US-Studio-M", ssml_gender=texttospeech.SsmlVoiceGender.MALE
     )
 
     # Select the type of audio file you want returned
