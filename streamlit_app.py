@@ -113,7 +113,7 @@ links_dict = {
 st.text("Links you might like:")
 html_text = ""
 for name, url in links_dict.items():
-    html_text += f"<a href={url}>{name}</a>&nbsp;&nbsp;&nbsp;&nbsp;"
+    html_text += f"<a href={url} target=”_blank”>{name}</a>&nbsp;&nbsp;&nbsp;&nbsp;"
 st.markdown(html_text, unsafe_allow_html=True)
 
 PROJECT_ID = st.text_input("PROJECT_ID", "")
