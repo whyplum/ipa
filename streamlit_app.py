@@ -115,7 +115,7 @@ GOOGLE_API_KEY = st.text_input("GOOGLE_API_KEY", "")
 api_key = st.secrets["DICT_API_KEY"]
 
 rows = []
-text = st.text_input("Enter text", "")
+text = st.text_area("Enter text", "", height=200)
 if st.button("Transcribe"):
     get_audio(text, "audio.mp3", GOOGLE_API_KEY, PROJECT_ID)
     st.audio("./audio.mp3")
